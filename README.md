@@ -1,6 +1,6 @@
-WebGL Gallery
+# WebGL Gallery
 
-# build
+## build
 ```bash
 $ npm run build -- [dirctoryName]
 ```
