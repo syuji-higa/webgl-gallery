@@ -1,0 +1,39 @@
+# cache
+.DS_Store
+Thumb.db
+
+# log
+*.log
+
+# npm
+node_modules
+
+# fusebox
+.fusebox
+
+# sourcemap
+*.map
+
+# url list
+.url-list/index.html
+
+# sound files
+*.aif
+*.mid
+*.midi
+*.mp3
+*.ra
+*.ram
+*.wav
+
+# movie files
+*.avi
+*.f4v
+*.flv
+*.m4v
+*.mov
+*.mp4
+*.mpeg
+*.mpg
+*.rm
+*.wmv

@@ -1,0 +1,29 @@
+{
+  "name": "webgl-gallery",
+  "version": "1.0.0",
+  "description": "WebGL Gallery",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syuji-higa/webgl-gallery.git"
+  },
+  "author": "syuji-higa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/syuji-higa/webgl-gallery/issues"
+  },
+  "homepage": "https://github.com/syuji-higa/webgl-gallery#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "bowser": "^1.9.4",
+    "fuse-box": "^3.3.0",
+    "pug": "^2.0.3",
+    "typescript": "^2.9.2"
+  }
+}
