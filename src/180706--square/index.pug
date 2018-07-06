@@ -4,11 +4,9 @@ html(lang="ja")
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width,initial-scale=1.0")
     meta(http-equiv="X-UA-Compatible" content="IE=edge")
-    link(rel="stylesheet" href="./sanitize.css")
     style.
-      body { min-width: 100vw; min-height: 100vh; }
-      .canvas { width: 100%; overflow: hidden; }
-      canvas { width: 100%; }
+      body { margin: 0; }
+      .canvas { overflow: hidden; }
   body
     .canvas.js-webgl.js-height-fitter
     script(src="./bundle.js")

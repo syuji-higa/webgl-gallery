@@ -13,15 +13,6 @@ writeFile(
   pug.compileFile(join('src', dir, 'index.pug'))(),
 );
 
-copyFile('src/sanitize.css', join('docs', dir, 'sanitize.css'), (err) => {
-  if (err) {
-    console.log(err.stack);
-  }
-  else {
-    console.log('Copy sanitize.css.');
-  }
-});
-
 const fuse = FuseBox.init({
   homeDir: 'src',
   output: join('docs', dir, '$name.js'),
