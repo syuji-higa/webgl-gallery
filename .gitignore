@@ -14,9 +14,6 @@ node_modules
 # sourcemap
 *.map
 
-# url list
-.url-list/index.html
-
 # sound files
 *.aif
 *.mid
