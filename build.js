@@ -33,7 +33,7 @@ const fuse = FuseBox.init({
     }),
     WebIndexPlugin({
       title: dir,
-      template: join('src', dir, 'index.html'),
+      template: join('src/works', dir, 'index.html'),
     }),
     isProduction &&
       QuantumPlugin({
@@ -47,11 +47,11 @@ const fuse = FuseBox.init({
 });
 
 if (isProduction) {
-  fuse.bundle('bundle').instructions(`>${dir}/bundle.js`);
+  fuse.bundle('bundle').instructions(`>works/${dir}/bundle.js`);
 } else {
   fuse
     .bundle('bundle')
-    .instructions(`>${dir}/bundle.js`)
+    .instructions(`>works/${dir}/bundle.js`)
     .hmr({ reload: true })
     .watch();
   fuse.dev({

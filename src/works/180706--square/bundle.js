@@ -1,6 +1,6 @@
 import 'babel-polyfill';
-import HeightFitter from '../modules/view/height-fitter';
-import ResizeObserver from '../modules/observer/resize-observer';
+import HeightFitter from '../../modules/view/height-fitter';
+import ResizeObserver from '../../modules/observer/resize-observer';
 import Webgl from './modules/view/webgl';
 
 new HeightFitter().add();

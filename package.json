@@ -5,7 +5,9 @@
   "main": "build.js",
   "scripts": {
     "build": "node build.js",
-    "build:production": "NODE_ENV=production node build.js"
+    "build:production": "NODE_ENV=production node build-index.js && NODE_ENV=production node build.js",
+    "build-index": "node build-index.js",
+    "build-index:production": "NODE_ENV=production node build-index.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +25,10 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "bowser": "^1.9.4",
+    "browser-sync": "^2.24.5",
     "fuse-box": "^3.3.0",
+    "pug": "^2.0.3",
+    "stylus": "^0.54.5",
     "typescript": "^2.9.2",
     "uglify-es": "^3.3.9"
   }

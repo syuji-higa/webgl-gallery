@@ -1,9 +1,12 @@
-import EventObserver from '../../../modules/observer/event-observer';
-import MouseObserver from '../../../modules/observer/mouse-observer';
-import ScrollObserver from '../../../modules/observer/scroll-observer';
-import { normalizeOverRatio, normalizeUnderRatio } from '../../../modules/model/ratio';
-import RequestAnimationFramer from '../../../modules/utility/request-animation-framer';
-import MatIV from '../../../modules/utility/webgl/matrix';
+import EventObserver from '../../../../modules/observer/event-observer';
+import MouseObserver from '../../../../modules/observer/mouse-observer';
+import ScrollObserver from '../../../../modules/observer/scroll-observer';
+import {
+  normalizeOverRatio,
+  normalizeUnderRatio,
+} from '../../../../modules/model/ratio';
+import RequestAnimationFramer from '../../../../modules/utility/request-animation-framer';
+import MatIV from '../../../../modules/utility/webgl/matrix';
 import MainMesh from './webgl/main-mesh';
 
 class WebGL {

@@ -5,8 +5,8 @@ import {
   createVbo,
   createIbo,
   enableAttribute,
-} from '../../../../modules/utility/webgl/util';
-import { square } from '../../../../modules/utility/webgl/model';
+} from '../../../../../modules/utility/webgl/util';
+import { square } from '../../../../../modules/utility/webgl/model';
 import { vShader, fShader } from './main-shader';
 
 class MainMesh {
