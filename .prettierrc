@@ -1,0 +1,21 @@
+# .prettierrc
+
+printWidth: 80
+tabWidth: 2
+
+overrides:
+- files: "*.js"
+  options:
+    singleQuote: true
+    semi: true
+    trailingComma: "all"
+    parser: "babylon"
+- files: "src/js/**/*.js"
+  options:
+    singleQuote: true
+    semi: true
+    trailingComma: "all"
+    parser: "babylon"
+- files: "src/sass/**/*.scss"
+  options:
+    parser: "scss"
