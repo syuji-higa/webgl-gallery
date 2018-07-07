@@ -48,10 +48,6 @@ const fuse = FuseBox.init({
 
 if (isProduction) {
   fuse.bundle('bundle').instructions(`>${dir}/bundle.js`);
-  fuse.dev({
-    root: join('docs', dir),
-    httpServer: true,
-  });
 } else {
   fuse
     .bundle('bundle')
