@@ -26,6 +26,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "bowser": "^1.9.4",
     "browser-sync": "^2.24.5",
+    "dat.gui": "^0.7.2",
     "fuse-box": "^3.3.0",
     "pug": "^2.0.3",
     "stylus": "^0.54.5",

@@ -7,6 +7,7 @@ import {
   enableAttribute,
 } from '../../../../../modules/utility/webgl/util';
 import { square } from '../../../../../modules/utility/webgl/model';
+import DatGUI from '../datgui';
 import { vShader, fShader } from './main-shader';
 
 class MainMesh {
@@ -22,6 +23,34 @@ class MainMesh {
       startTime: null,
     };
 
+    // create mesh status
+    this._meshStatus = {
+      color: [0, 164, 151, 1],
+      fluctuationPower: 0.1,
+      fluctuationSpeed: 0.2,
+      sparklePower: 0.2,
+      sparkleSpeed: 0.2,
+      wireframe: false,
+    };
+
+    // GUI
+    const _gui = DatGUI.getInstance().gui;
+    _gui.remember(this._meshStatuse);
+    // fluctuation
+    const _fFluctuation = _gui.addFolder('Fluctuation');
+    _fFluctuation.add(this._meshStatus, 'fluctuationPower', 0, 0.5);
+    _fFluctuation.add(this._meshStatus, 'fluctuationSpeed', 0.1, 1);
+    _fFluctuation.open();
+    const _fSparkle = _gui.addFolder('Sparkle');
+    // sparkle
+    _fSparkle.add(this._meshStatus, 'sparklePower', 0, 0.5);
+    _fSparkle.add(this._meshStatus, 'sparkleSpeed', 0.1, 1);
+    _fSparkle.open();
+    // color
+    _gui.addColor(this._meshStatus, 'color');
+    // wireframe
+    _gui.add(this._meshStatus, 'wireframe');
+
     // webGL items
     this._gl = gl;
     this._matIV = matIV;
@@ -33,17 +62,17 @@ class MainMesh {
     this._prg = createProgram(gl, _vs, _fs);
 
     // attribute location
-    this._attLocs = [
-      gl.getAttribLocation(this._prg, 'position'),
-      gl.getAttribLocation(this._prg, 'color'),
-    ];
-    this._attStrides = [3, 4];
+    this._attLocs = [gl.getAttribLocation(this._prg, 'position')];
+    this._attStrides = [3];
 
     // uniform location
     this._uniLocs = [
       gl.getUniformLocation(this._prg, 'mvpMatrix'),
       gl.getUniformLocation(this._prg, 'time'),
       gl.getUniformLocation(this._prg, 'mouse'),
+      gl.getUniformLocation(this._prg, 'color'),
+      gl.getUniformLocation(this._prg, 'fluctuation'),
+      gl.getUniformLocation(this._prg, 'sparkle'),
     ];
 
     // pre vertex
@@ -51,9 +80,7 @@ class MainMesh {
     const _attLen = this._attStrides.reduce((p, c) => p + c);
 
     // create mesh
-    const _mesh = square(0.5, 0.5, 1, 1, {
-      color: [0.7, 0.7, 0.7, 1],
-    });
+    const _mesh = square(0.5, 0.5, 20, 20);
 
     // set attribute
     for (let i = 0; _mesh.p.length / 3 > i; i++) {
@@ -63,12 +90,6 @@ class MainMesh {
       _vartexAtts[_attCnt + 0] = _mesh.p[3 * i + 0];
       _vartexAtts[_attCnt + 1] = _mesh.p[3 * i + 1];
       _vartexAtts[_attCnt + 2] = _mesh.p[3 * i + 2];
-
-      // set color
-      _vartexAtts[_attCnt + 3] = _mesh.c[4 * i + 0];
-      _vartexAtts[_attCnt + 4] = _mesh.c[4 * i + 1];
-      _vartexAtts[_attCnt + 5] = _mesh.c[4 * i + 2];
-      _vartexAtts[_attCnt + 6] = _mesh.c[4 * i + 3];
     }
 
     // set byteLen & offset
@@ -161,9 +182,24 @@ class MainMesh {
     _gl.uniformMatrix4fv(_ul[0], false, data.mvpMat); // mvpMatrix
     _gl.uniform1f(_ul[1], _time); // time
     _gl.uniform2fv(_ul[2], [data.mx, data.my]); // mouse
+    _gl.uniform4fv(_ul[3], [
+      this._meshStatus.color[0] / 255, // r
+      this._meshStatus.color[1] / 255, // g
+      this._meshStatus.color[2] / 255, // b
+      this._meshStatus.color[3], // a
+    ]); // color
+    _gl.uniform2fv(_ul[4], [
+      this._meshStatus.fluctuationPower,
+      this._meshStatus.fluctuationSpeed,
+    ]); // fluctuation
+    _gl.uniform2fv(_ul[5], [
+      this._meshStatus.sparklePower,
+      this._meshStatus.sparkleSpeed,
+    ]); // sparkle
 
     // draw
-    _gl.drawElements(_gl.TRIANGLES, _mesh.indexLen, _gl.UNSIGNED_SHORT, 0);
+    const _primitive = this._meshStatus.wireframe ? 'LINES' : 'TRIANGLES';
+    _gl.drawElements(_gl[_primitive], _mesh.indexLen, _gl.UNSIGNED_SHORT, 0);
   }
 }
 
