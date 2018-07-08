@@ -1,3 +1,4 @@
+const { accessSync } = require('fs');
 const { join } = require('path');
 const {
   FuseBox,
@@ -9,9 +10,14 @@ const {
 const dir = process.argv[2];
 const isProduction = process.env.NODE_ENV === 'production';
 
+const srcDir = join('src/works', dir);
+const distDir = join('docs', dir);
+
+accessSync(srcDir);
+
 const fuse = FuseBox.init({
   homeDir: 'src',
-  output: join('docs', dir, '$name.js'),
+  output: join(distDir, '$name.js'),
   sourceMaps: !isProduction,
   plugins: [
     BabelPlugin({
@@ -33,7 +39,7 @@ const fuse = FuseBox.init({
     }),
     WebIndexPlugin({
       title: dir,
-      template: join('src/works', dir, 'index.html'),
+      template: join(srcDir, 'index.html'),
     }),
     isProduction &&
       QuantumPlugin({
@@ -55,7 +61,7 @@ if (isProduction) {
     .hmr({ reload: true })
     .watch();
   fuse.dev({
-    root: join('docs', dir),
+    root: distDir,
     httpServer: true,
   });
 }
