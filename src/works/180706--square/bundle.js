@@ -7,7 +7,7 @@ new HeightFitter().add();
 
 const webGL = new WebGL();
 webGL.start();
-webGL.mesh('main', 'start');
+webGL.object('main', 'start');
 
 // dispatch document 'resize' & 'windowSizeTypeChange'
 ResizeObserver.getInstance().resize();

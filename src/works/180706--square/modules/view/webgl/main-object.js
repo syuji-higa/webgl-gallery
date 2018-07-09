@@ -6,11 +6,11 @@ import {
   createIbo,
   enableAttribute,
 } from '../../../../../modules/utility/webgl/util';
-import { square } from '../../../../../modules/utility/webgl/model';
-import DatGUI from '../datgui';
+import { square } from '../../../../../modules/utility/webgl/model-2d';
 import { vShader, fShader } from './main-shader';
+import DatGUI from '../datgui';
 
-class MainMesh {
+class MainObject {
   /**
    * @param {WebGLRenderingContext} gl
    * @param {Instance} matIV
@@ -23,8 +23,8 @@ class MainMesh {
       startTime: null,
     };
 
-    // create mesh status
-    this._meshStatus = {
+    // create object status
+    this._objectStatus = {
       color: [0, 164, 151, 1],
       fluctuationPower: 0.1,
       fluctuationSpeed: 0.2,
@@ -33,23 +33,27 @@ class MainMesh {
       wireframe: false,
     };
 
-    // GUI
-    const _gui = DatGUI.getInstance().gui;
-    _gui.remember(this._meshStatuse);
-    // fluctuation
-    const _fFluctuation = _gui.addFolder('Fluctuation');
-    _fFluctuation.add(this._meshStatus, 'fluctuationPower', 0, 0.5);
-    _fFluctuation.add(this._meshStatus, 'fluctuationSpeed', 0.1, 1);
-    _fFluctuation.open();
-    const _fSparkle = _gui.addFolder('Sparkle');
-    // sparkle
-    _fSparkle.add(this._meshStatus, 'sparklePower', 0, 0.5);
-    _fSparkle.add(this._meshStatus, 'sparkleSpeed', 0.1, 1);
-    _fSparkle.open();
-    // color
-    _gui.addColor(this._meshStatus, 'color');
-    // wireframe
-    _gui.add(this._meshStatus, 'wireframe');
+    /**
+     * GUI
+     */
+    {
+      const _gui = DatGUI.getInstance().gui;
+      _gui.remember(this._objectStatuse);
+      // fluctuation
+      const _fFluctuation = _gui.addFolder('Fluctuation');
+      _fFluctuation.add(this._objectStatus, 'fluctuationPower', 0, 0.5);
+      _fFluctuation.add(this._objectStatus, 'fluctuationSpeed', 0.1, 1);
+      _fFluctuation.open();
+      const _fSparkle = _gui.addFolder('Sparkle');
+      // sparkle
+      _fSparkle.add(this._objectStatus, 'sparklePower', 0, 0.5);
+      _fSparkle.add(this._objectStatus, 'sparkleSpeed', 0.1, 1);
+      _fSparkle.open();
+      // color
+      _gui.addColor(this._objectStatus, 'color');
+      // wireframe
+      _gui.add(this._objectStatus, 'wireframe');
+    }
 
     // webGL items
     this._gl = gl;
@@ -79,17 +83,17 @@ class MainMesh {
     const _vartexAtts = [];
     const _attLen = this._attStrides.reduce((p, c) => p + c);
 
-    // create mesh
-    const _mesh = square(0.5, 0.5, 20, 20);
+    // create model
+    const _model = square(0.5, 0.5, 20, 20);
 
     // set attribute
-    for (let i = 0; _mesh.p.length / 3 > i; i++) {
+    for (let i = 0; _model.p.length / 3 > i; i++) {
       const _attCnt = _attLen * i;
 
       // set positoin
-      _vartexAtts[_attCnt + 0] = _mesh.p[3 * i + 0];
-      _vartexAtts[_attCnt + 1] = _mesh.p[3 * i + 1];
-      _vartexAtts[_attCnt + 2] = _mesh.p[3 * i + 2];
+      _vartexAtts[_attCnt + 0] = _model.p[3 * i + 0];
+      _vartexAtts[_attCnt + 1] = _model.p[3 * i + 1];
+      _vartexAtts[_attCnt + 2] = _model.p[3 * i + 2];
     }
 
     // set byteLen & offset
@@ -101,15 +105,15 @@ class MainMesh {
       _byteCnt += _byteLen;
     }
 
-    // create mesh data
-    this._mesh = {
+    // create object data
+    this._objectData = {
       vbo: createVbo(gl, new Float32Array(_vartexAtts)),
-      ibo: createIbo(gl, _mesh.i),
+      ibo: createIbo(gl, _model.i),
       attLocs: this._attLocs,
       attStrides: this._attStrides,
       offsets: _offsets,
       byteLen: _byteCnt,
-      indexLen: _mesh.i.length,
+      indexLen: _model.i.length,
     };
   }
 
@@ -156,20 +160,26 @@ class MainMesh {
     const _time = data.time - _status.startTime;
 
     // variables
-    const { _gl, _matIV: _m, _uniLocs: _ul, _mesh } = this;
+    const {
+      _gl,
+      _matIV: _m,
+      _uniLocs: _ul,
+      _objectData: od,
+      _objectStatus: os,
+    } = this;
 
     // use program
     useProgram(_gl, this._prg);
 
     // bind ibo
-    _gl.bindBuffer(_gl.ELEMENT_ARRAY_BUFFER, _mesh.ibo);
+    _gl.bindBuffer(_gl.ELEMENT_ARRAY_BUFFER, od.ibo);
 
     // set attribute
-    _gl.bindBuffer(_gl.ARRAY_BUFFER, _mesh.vbo);
-    for (let i = 0; _mesh.attLocs.length > i; i++) {
-      enableAttribute(_gl, _mesh.attLocs[i], _mesh.attStrides[i], {
-        stride: _mesh.byteLen,
-        offset: _mesh.offsets[i],
+    _gl.bindBuffer(_gl.ARRAY_BUFFER, od.vbo);
+    for (let i = 0; od.attLocs.length > i; i++) {
+      enableAttribute(_gl, od.attLocs[i], od.attStrides[i], {
+        stride: od.byteLen,
+        offset: od.offsets[i],
       });
     }
     _gl.bindBuffer(_gl.ARRAY_BUFFER, null);
@@ -183,24 +193,18 @@ class MainMesh {
     _gl.uniform1f(_ul[1], _time); // time
     _gl.uniform2fv(_ul[2], [data.mx, data.my]); // mouse
     _gl.uniform4fv(_ul[3], [
-      this._meshStatus.color[0] / 255, // r
-      this._meshStatus.color[1] / 255, // g
-      this._meshStatus.color[2] / 255, // b
-      this._meshStatus.color[3], // a
+      os.color[0] / 255, // r
+      os.color[1] / 255, // g
+      os.color[2] / 255, // b
+      os.color[3], // a
     ]); // color
-    _gl.uniform2fv(_ul[4], [
-      this._meshStatus.fluctuationPower,
-      this._meshStatus.fluctuationSpeed,
-    ]); // fluctuation
-    _gl.uniform2fv(_ul[5], [
-      this._meshStatus.sparklePower,
-      this._meshStatus.sparkleSpeed,
-    ]); // sparkle
+    _gl.uniform2fv(_ul[4], [os.fluctuationPower, os.fluctuationSpeed]); // fluctuation
+    _gl.uniform2fv(_ul[5], [os.sparklePower, os.sparkleSpeed]); // sparkle
 
     // draw
-    const _primitive = this._meshStatus.wireframe ? 'LINES' : 'TRIANGLES';
-    _gl.drawElements(_gl[_primitive], _mesh.indexLen, _gl.UNSIGNED_SHORT, 0);
+    const _primitive = os.wireframe ? 'LINES' : 'TRIANGLES';
+    _gl.drawElements(_gl[_primitive], od.indexLen, _gl.UNSIGNED_SHORT, 0);
   }
 }
 
-export { MainMesh as default };
+export { MainObject as default };

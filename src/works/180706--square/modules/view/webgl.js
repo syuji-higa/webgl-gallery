@@ -7,7 +7,7 @@ import {
 } from '../../../../modules/model/ratio';
 import RequestAnimationFramer from '../../../../modules/utility/request-animation-framer';
 import MatIV from '../../../../modules/utility/webgl/matrix';
-import MainMesh from './webgl/main-mesh';
+import MainObject from './webgl/main-object';
 
 class WebGL {
   /**
@@ -77,9 +77,9 @@ class WebGL {
       return;
     }
 
-    // create mesh
-    this._meshes = {
-      main: new MainMesh(this._gl, this._matIV, this._dpr),
+    // create object
+    this._objects = {
+      main: new MainObject(this._gl, this._matIV, this._dpr),
     };
 
     // clear
@@ -165,22 +165,22 @@ class WebGL {
    * @param {?*} arg
    * @return {Promise}
    */
-  async mesh(id, method, ...arg) {
+  async object(id, method, ...arg) {
     if (this._gl === 'undefined') {
       throw new Error('Not find WebGL context.');
     }
 
-    if (!(id in this._meshes)) {
+    if (!(id in this._objects)) {
       throw new Error(`Not find "${id}" id.`);
     }
 
-    const _mesh = this._meshes[id];
+    const _object = this._objects[id];
 
-    if (!(method in _mesh)) {
+    if (!(method in _object)) {
       throw new Error(`Not find "${id}" id.`);
     }
 
-    await _mesh[method](...arg);
+    await _object[method](...arg);
   }
 
   _render() {
@@ -210,10 +210,10 @@ class WebGL {
     this._matIV.perspective(90, w / h, 0.1, 100, this._pMat);
     this._matIV.multiply(this._pMat, this._vMat, this._tmpMat);
 
-    // draw mesh
-    for (const mesh of Object.values(this._meshes)) {
+    // draw object
+    for (const object of Object.values(this._objects)) {
       // prettier-ignore
-      mesh.draw({
+      object.draw({
         w, h, wr, hr, wor, hor, wur, hur,
         mx: this._status.dmx,
         my: this._status.dmy,
