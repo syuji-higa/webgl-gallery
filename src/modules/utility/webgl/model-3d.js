@@ -1,164 +1,12 @@
-import { pointColor } from '../../model/coordinates';
-import { baseFromHyAn, heightFromHyAn } from '../../model/math-trig';
-
 /**
- * webgl model
+ * webgl model 3D
  */
 
 /**
- * @param {number} width - float[0,inf)
- * @param {number} height - float[0,inf)
  * @param {number} row - int[0,inf)
  * @param {number} col - int[0,inf)
- * @param {Object} [opt]
- * @param {Array<number>} [opt.offset] - float(-inf,inf)
- * @param {?Array<number|Array<number>>} [opts.color] - float[0,1]
- * @param {number} [opt.startIndex] - int[0,inf)
- * @return {Object}
- * @property {Array<number>} p - position float(-inf,inf)
- * @property {Array<number>} t - texture float[0,1]
- * @property {Array<number>} c - color float[0,1]
- * @property {Array<number>} i - index int[0,inf)
- */
-export const square = (width, height, row, col, opts = {}) => {
-  const { offset, color, startIndex } = Object.assign(
-    {
-      offset: [0, 0],
-      color: [1, 1, 1, 1],
-      startIndex: 0,
-    },
-    opts,
-  );
-
-  const _pos = [];
-  const _st = [];
-  const _clr = [];
-  const _idx = [];
-  const _pw = (width * 2) / col;
-  const _ph = (height * 2) / row;
-  const _tw = 1 / col;
-  const _th = 1 / row;
-  for (let y = 0; row >= y; y++) {
-    for (let x = 0; col >= x; x++) {
-      // prettier-ignore
-      _pos.push(
-        offset[0] + -width + _pw * x, // x
-        offset[1] + height - _ph * y, // y
-        0, // z
-      );
-      // prettier-ignore
-      _st.push(
-        _tw * x, // x
-        _th * y, // y
-      );
-      const _xr = x / col;
-      const _yr = y / row;
-      if (Array.isArray(color[0])) {
-        _clr.push(...pointColor(...color, _xr, _yr));
-      } else {
-        _clr.push(...color);
-      }
-    }
-  }
-  for (let y = 0; row > y; y++) {
-    for (let x = 0; col > x; x++) {
-      // prettier-ignore
-      const _p = [
-        startIndex + (y    ) * (col + 1) + x,
-        startIndex + (y + 1) * (col + 1) + x,
-        startIndex + (y    ) * (col + 1) + x + 1,
-        startIndex + (y + 1) * (col + 1) + x + 1,
-      ];
-      // prettier-ignore
-      _idx.push(
-        _p[0], _p[1], _p[2],
-        _p[1], _p[3], _p[2],
-      );
-    }
-  }
-  return { p: _pos, t: _st, c: _clr, i: _idx };
-};
-
-/**
- * @param {number} rad - float
- * @param {number} num - int
- * @param {Object} [opt]
- * @param {Array<number>} [opt.offset] - float[0,inf)
- * @param {Array<number>} [opt.ratio] - float
- * @param {Array<number>} [opts.color] - float[0,1]
- * @param {number} [opt.startIndex] - int[0,inf)
- * @return {Object}
- * @property {Array<number>} p - position float(-inf,inf)
- * @property {Array<number>} t - texture float[0,1]
- * @property {Array<number>} c - color float[0,1]
- * @property {Array<number>} i - index int[0,inf)
- */
-export const circle = (rad, num, opts = {}) => {
-  const { offset, ratio, color, startIndex } = Object.assign(
-    {
-      offset: [0, 0],
-      ratio: [1, 1],
-      color: [1, 1, 1, 1],
-      startIndex: 0,
-    },
-    opts,
-  );
-
-  const _pos = [];
-  const _st = [];
-  const _clr = [];
-  const _idx = [];
-
-  const _ang = (Math.PI * 2) / num;
-
-  _pos.push(offset[0], offset[1], 0);
-  _st.push(offset[0] + 0.5, offset[1] + 0.5);
-  _clr.push(...color);
-
-  for (let i = 0; num > i; i++) {
-    const _a = _ang * i;
-    const _x = baseFromHyAn(rad, _a);
-    const _y = heightFromHyAn(rad, _a);
-    // prettier-ignore
-    _pos.push(
-      offset[0] + _x * ratio[0],
-      offset[1] + _y * ratio[1],
-      0,
-    );
-    _clr.push(...color);
-    // prettier-ignore
-    _st.push(
-      (_x + rad) * 0.5,
-      (_y + rad) * 0.5,
-    );
-  }
-
-  for (let i = 0; num > i; i++) {
-    if (num - 1 > i) {
-      // prettier-ignore
-      _idx.push(
-        startIndex,
-        startIndex + 1 + i,
-        startIndex + 2 + i,
-      );
-    } else {
-      // prettier-ignore
-      _idx.push(
-        startIndex,
-        startIndex + 1 + i,
-        startIndex + 1,
-      );
-    }
-  }
-
-  return { p: _pos, t: _st, c: _clr, i: _idx };
-};
-
-/**
- * @param {number} row - int
- * @param {number} col - int
- * @param {number} irad - float
- * @param {number} orad - float
+ * @param {number} irad - float[0,inf)
+ * @param {number} orad - float[0,inf)
  * @param {Array<number>} color - float[0,1]
  * @return {Object}
  * @property {Array<number>} p - position float(-inf,inf)
@@ -177,15 +25,15 @@ export const torus = (row, col, irad, orad, color) => {
     const _r = ((Math.PI * 2) / row) * i;
     const _rr = Math.cos(_r);
     const _ry = Math.sin(_r);
-    for (let ii = 0; ii <= _col; ii++) {
-      const _tr = ((Math.PI * 2) / _col) * ii;
+    for (let ii = 0; ii <= col; ii++) {
+      const _tr = ((Math.PI * 2) / col) * ii;
       const _tx = (_rr * irad + orad) * Math.cos(_tr);
       const _ty = _ry * irad;
       const _tz = (_rr * irad + orad) * Math.sin(_tr);
       const _rx = _rr * Math.cos(_tr);
       const _rz = _rr * Math.sin(_tr);
-      const _tc = color || hsva((360 / _col) * ii, 1, 1, 1);
-      const _rs = (1 / _col) * ii;
+      const _tc = color || hsva((360 / col) * ii, 1, 1, 1);
+      const _rs = (1 / col) * ii;
       let _rt = (1 / row) * i + 0.5;
       if (_rt > 1.0) _rt -= 1.0;
       _rt = 1.0 - _rt;
@@ -196,12 +44,12 @@ export const torus = (row, col, irad, orad, color) => {
     }
   }
   for (let i = 0; i < row; i++) {
-    for (let ii = 0; ii < _col; ii++) {
-      const _r = (_col + 1) * i + ii;
+    for (let ii = 0; ii < col; ii++) {
+      const _r = (col + 1) * i + ii;
       // prettier-ignore
       _idx.push(
-        _r           , _r + _col + 1, _r + 1,
-        _r + _col + 1, _r + _col + 2, _r + 1,
+        _r           , _r + col + 1, _r + 1,
+        _r + col + 1, _r + col + 2, _r + 1,
       );
     }
   }
@@ -209,9 +57,9 @@ export const torus = (row, col, irad, orad, color) => {
 };
 
 /**
- * @param {number} row - int
- * @param {number} col - int
- * @param {number} rad - float
+ * @param {number} row - int[0,inf)
+ * @param {number} col - int[0,inf)
+ * @param {number} rad - float[0,inf)
  * @param {Array<number>} color - float[0,1]
  * @return {Object}
  * @property {Array<number>} p - position float(-inf,inf)
@@ -259,20 +107,20 @@ export const sphere = (row, col, rad, color) => {
 };
 
 /**
- * @param {number} sample - int
- * @param {number} scale - float
+ * @param {number} sample - int[1,inf)
+ * @param {number} scale - float[0,inf)
  * @param {Array<number>} color - float[0,1]
  * @param {Object} [opts]
  * @param {Array<number>} [opts.color] - float[0,1]
- * @param {number} [opts.startIndex] - int
- * @param {number} [opts.vals] - int
+ * @param {number} [opts.startIndex] - int[0,inf)
+ * @param {Array<number>} [opts.incrementOpts] - int [0,inf)
  * @return {Object}
  * @property {Array<number>} p - position float(-inf,inf)
  * @property {Array<number>} i - index int[0,inf)
  */
 export const fibonacciSphere = (sample, scale, opts = {}) => {
-  const { color, startIndex, vals } = Object.assign(
-    { color: [1, 1, 1, 1], startIndex: 0, vals: [3, 5, 1] },
+  const { color, startIndex, incrementOpts } = Object.assign(
+    { color: [1, 1, 1, 1], startIndex: 0, incrementOpts: [3, 5, 1] },
     opts,
   );
 
@@ -282,7 +130,10 @@ export const fibonacciSphere = (sample, scale, opts = {}) => {
 
   const _offset = 2 / sample;
   // const _increment = Math.PI * (3 - Math.sqrt(5));
-  const _increment = Math.PI * (vals[0] - Math.sqrt(vals[1])) * vals[2];
+  const _increment =
+    Math.PI *
+    (incrementOpts[0] - Math.sqrt(incrementOpts[1])) *
+    incrementOpts[2];
   const _face = sample - 2;
 
   for (let i = 0; sample > i; i++) {

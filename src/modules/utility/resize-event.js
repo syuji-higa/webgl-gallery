@@ -1,7 +1,7 @@
 import bowser from 'bowser';
 import EventObserver from '../observer/event-observer';
 
-import { wait } from '../utility/wait';
+import { wait } from './wait';
 
 const eventObserver = EventObserver.getInstance();
 

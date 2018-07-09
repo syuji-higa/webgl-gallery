@@ -1,5 +1,5 @@
 import Singleton from '../pattern/singleton';
-import EventObserver from '../observer/event-observer';
+import EventObserver from './event-observer';
 import { throttle } from '../utility/throttle';
 
 class ScrollObserver extends Singleton {

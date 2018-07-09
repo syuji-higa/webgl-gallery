@@ -1,6 +1,6 @@
 import Singleton from '../pattern/singleton';
 import ReizeObserver from './resize-observer';
-import EventObserver from '../observer/event-observer';
+import EventObserver from './event-observer';
 import { throttle } from '../utility/throttle';
 
 class MouseObserver extends Singleton {
