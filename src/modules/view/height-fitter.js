@@ -1,5 +1,5 @@
 import EventObserver from '../observer/event-observer';
-import ReizeObserver from '../observer/resize-observer';
+import WindowSizeObserver from '../observer/window-size-observer';
 
 class HeightFitter {
   /**
@@ -22,7 +22,7 @@ class HeightFitter {
 
     this._winHeight = 0;
 
-    this._reizeObserver = ReizeObserver.getInstance();
+    this._windowSeizeObserver = WindowSizeObserver.getInstance();
 
     this._resizeEvt = EventObserver.getInstance().create(
       document,
@@ -40,7 +40,7 @@ class HeightFitter {
   }
 
   resize() {
-    this._winHeight = this._reizeObserver.size.height;
+    this._winHeight = this._windowSeizeObserver.size.height;
 
     Array.from(this._$$el, $el => {
       $el.style.height = `${this._winHeight}px`;

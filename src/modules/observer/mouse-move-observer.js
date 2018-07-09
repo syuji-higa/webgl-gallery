@@ -1,9 +1,9 @@
 import Singleton from '../pattern/singleton';
-import ReizeObserver from './resize-observer';
+import WindowSizeObserver from './window-size-observer';
 import EventObserver from './event-observer';
 import { throttle } from '../utility/throttle';
 
-class MouseObserver extends Singleton {
+class MouseMoveObserver extends Singleton {
   constructor() {
     super();
 
@@ -12,7 +12,7 @@ class MouseObserver extends Singleton {
       y: 0,
     };
 
-    this._reizeObserver = ReizeObserver.getInstance();
+    this._windowSizeObserver = WindowSizeObserver.getInstance();
 
     this._mousemoveThrottle = throttle(100);
 
@@ -53,11 +53,11 @@ class MouseObserver extends Singleton {
   }
 
   _mousemoved(e) {
-    const { width, height } = this._reizeObserver.size;
+    const { width, height } = this._windowSizeObserver.size;
 
     this._status.x = (e.pageX / width) * 2 - 1;
     this._status.y = (e.pageY / height) * 2 - 1;
   }
 }
 
-export { MouseObserver as default };
+export { MouseMoveObserver as default };

@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import HeightFitter from '../../modules/view/height-fitter';
-import ResizeObserver from '../../modules/observer/resize-observer';
+import WindowSizeObserver from '../../modules/observer/window-size-observer';
 import WebGL from './modules/view/webgl';
 
 new HeightFitter().add();
@@ -10,4 +10,4 @@ webGL.start();
 webGL.object('main', 'start');
 
 // dispatch document 'resize' & 'windowSizeTypeChange'
-ResizeObserver.getInstance().resize();
+WindowSizeObserver.getInstance().resize();

@@ -1,5 +1,5 @@
 import EventObserver from '../../../../modules/observer/event-observer';
-import MouseObserver from '../../../../modules/observer/mouse-observer';
+import MouseMoveObserver from '../../../../modules/observer/mouse-move-observer';
 import ScrollObserver from '../../../../modules/observer/scroll-observer';
 import {
   normalizeOverRatio,
@@ -45,7 +45,7 @@ class WebGL {
     this._fps = fps;
     this._mouseAccel = 0.02;
     this._offsetAccel = 0.02;
-    this._mouseObserver = MouseObserver.getInstance();
+    this._mouseMoveObserver = MouseMoveObserver.getInstance();
     this._scrollObserver = ScrollObserver.getInstance();
     this._rAF = RequestAnimationFramer.getInstance();
     this._matIV = new MatIV();
@@ -193,7 +193,7 @@ class WebGL {
     const _t = new Date().getTime() - this._startedTime;
 
     // mouse cursol
-    const { x: mx, y: my } = this._mouseObserver.position;
+    const { x: mx, y: my } = this._mouseMoveObserver.position;
     this._status.dmx += (mx - dmx) * this._mouseAccel;
     this._status.dmy += (my - dmy) * this._mouseAccel;
 

@@ -2,7 +2,7 @@ import Singleton from '../pattern/singleton';
 import { debounce } from '../utility/debounce';
 import { createResizeEvent } from '../utility/resize-event';
 
-class ResizeObserver extends Singleton {
+class WindowSizeObserver extends Singleton {
   /**
    * @return {Array<number>} - int[0,inf)
    */
@@ -88,4 +88,4 @@ class ResizeObserver extends Singleton {
   }
 }
 
-export { ResizeObserver as default };
+export { WindowSizeObserver as default };
