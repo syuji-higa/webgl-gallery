@@ -35,8 +35,8 @@ class MouseMoveObserver extends Singleton {
 
   /**
    * @param {Object}
-   * @property {number} x - float [-1,1]
-   * @property {number} y - float [-1,1]
+   * @property {number} x - float[-1,1]
+   * @property {number} y - float[-1,1]
    */
   get position() {
     return {

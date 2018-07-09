@@ -73,7 +73,7 @@ class MainObject {
     this._uniLocs = [
       gl.getUniformLocation(this._prg, 'mvpMatrix'),
       gl.getUniformLocation(this._prg, 'time'),
-      gl.getUniformLocation(this._prg, 'mouse'),
+      gl.getUniformLocation(this._prg, 'pov'),
       gl.getUniformLocation(this._prg, 'color'),
       gl.getUniformLocation(this._prg, 'fluctuation'),
       gl.getUniformLocation(this._prg, 'sparkle'),
@@ -137,8 +137,8 @@ class MainObject {
    * @param {number} data.hor - float[1,inf)
    * @param {number} data.wur - float[0,1]
    * @param {number} data.hur - float[0,1]
-   * @param {number} data.mx - float[-1,1]
-   * @param {number} data.my - float[-1,1]
+   * @param {number} data.povx - float[-1,1]
+   * @param {number} data.povy - float[-1,1]
    * @param {number} data.ox - float[0,inf)
    * @param {number} data.oy - float[0,inf)
    * @param {number} data.time - int[0,inf)
@@ -191,7 +191,7 @@ class MainObject {
     // set uniform
     _gl.uniformMatrix4fv(_ul[0], false, data.mvpMat); // mvpMatrix
     _gl.uniform1f(_ul[1], _time); // time
-    _gl.uniform2fv(_ul[2], [data.mx, data.my]); // mouse
+    _gl.uniform2fv(_ul[2], [data.povx, data.povy]); // point of view
     _gl.uniform4fv(_ul[3], [
       os.color[0] / 255, // r
       os.color[1] / 255, // g

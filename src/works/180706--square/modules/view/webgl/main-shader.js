@@ -2,7 +2,7 @@ export const vShader = `
   attribute vec3  position;
   uniform   mat4  mvpMatrix;
   uniform   float time;
-  uniform   vec2  mouse;
+  uniform   vec2  pov; // point of view
   uniform   vec4  color;
   uniform   vec2  fluctuation; // power, speed
   uniform   vec2  sparkle; // power, speed

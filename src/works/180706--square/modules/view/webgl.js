@@ -1,5 +1,7 @@
+import bowser from 'bowser';
 import EventObserver from '../../../../modules/observer/event-observer';
 import MouseMoveObserver from '../../../../modules/observer/mouse-move-observer';
+import DeviceOrientationObserver from '../../../../modules/observer/device-orientation-observer';
 import ScrollObserver from '../../../../modules/observer/scroll-observer';
 import {
   normalizeOverRatio,
@@ -31,6 +33,9 @@ class WebGL {
   constructor(opts = {}) {
     const { selfCls, isDisableCls, fps } = Object.assign(WebGL._defOpts, opts);
 
+    this._$write = document.createElement('div');
+    document.body.appendChild(this._$write);
+
     // prettier-ignore
     this._status = {
       w: 0, h: 0,
@@ -38,17 +43,22 @@ class WebGL {
       wor: 0, hor: 0,
       wur: 0, hur: 0,
       dox: 0, doy: 0,
-      dmx: 0, dmy: 0,
+      povx: 0, povy: 0,
     };
 
+    this._isTouchDevice = bowser.mobile || bowser.tablet;
     this._dpr = devicePixelRatio || 1;
     this._fps = fps;
-    this._mouseAccel = 0.02;
+    this._povAccel = 0.02;
     this._offsetAccel = 0.02;
-    this._mouseMoveObserver = MouseMoveObserver.getInstance();
-    this._scrollObserver = ScrollObserver.getInstance();
-    this._rAF = RequestAnimationFramer.getInstance();
     this._matIV = new MatIV();
+    this._rAF = RequestAnimationFramer.getInstance();
+    this._scrollObserver = ScrollObserver.getInstance();
+    if (this._isTouchDevice) {
+      this._deviceOrientationObserver = DeviceOrientationObserver.getInstance();
+    } else {
+      this._mouseMoveObserver = MouseMoveObserver.getInstance();
+    }
 
     // create matrix
     const _m = this._matIV;
@@ -187,17 +197,28 @@ class WebGL {
     // prettier-ignore
     const {
       w, h, wr, hr, wor, hor, wur, hur,
-      dox, doy, dmx, dmy,
+      dox, doy, povx, povy,
     } = this._status;
 
     const _t = new Date().getTime() - this._startedTime;
 
-    // mouse cursol
-    const { x: mx, y: my } = this._mouseMoveObserver.position;
-    this._status.dmx += (mx - dmx) * this._mouseAccel;
-    this._status.dmy += (my - dmy) * this._mouseAccel;
+    // point of view
+    let _povx = 0;
+    let _povy = 0;
+    if (this._isTouchDevice) {
+      const { beta, gamma } = this._deviceOrientationObserver.orientation;
+      _povx = gamma;
+      _povy = beta;
+    } else {
+      const { x, y } = this._mouseMoveObserver.position;
+      _povx = x;
+      _povy = y;
+    }
+    this._status.povx += (_povx - povx) * this._povAccel;
+    this._status.povy += (_povy - povy) * this._povAccel;
+    this._$write.textContent = `${this._status.povx}/${this._status.povy}`;
 
-    // scroll cursol
+    // scroll
     const { x: ox, y: oy } = this._scrollObserver.offset;
     this._status.dox += (ox - dox) * this._scrollAccel;
     this._status.doy += (oy - doy) * this._scrollAccel;
@@ -206,7 +227,12 @@ class WebGL {
     this._gl.blendFunc(this._gl.SRC_ALPHA, this._gl.ONE_MINUS_SRC_ALPHA);
 
     // init view
-    this._matIV.lookAt([-dmx, dmy, 1], [dmx, -dmy, 0], [0, 1, 0], this._vMat);
+    this._matIV.lookAt(
+      [-povx, povy, 1],
+      [povx, -povy, 0],
+      [0, 1, 0],
+      this._vMat,
+    );
     this._matIV.perspective(90, w / h, 0.1, 100, this._pMat);
     this._matIV.multiply(this._pMat, this._vMat, this._tmpMat);
 
@@ -215,8 +241,8 @@ class WebGL {
       // prettier-ignore
       object.draw({
         w, h, wr, hr, wor, hor, wur, hur,
-        mx: this._status.dmx,
-        my: this._status.dmy,
+        povx: this._status.povx,
+        povy: this._status.povy,
         ox: this._status.dox,
         oy: this._status.doy,
         time: _t,
