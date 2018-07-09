@@ -39,9 +39,9 @@ class DeviceOrientationObserver extends Singleton {
    */
   get orientation() {
     return {
-      alpha: this._status.alpha, // float[0,1]
-      beta: this._status.beta, // float[-1,1]
-      gamma: this._status.gamma, // float[-1,1]
+      alpha: this._status.alpha,
+      beta: this._status.beta,
+      gamma: this._status.gamma,
     };
   }
 

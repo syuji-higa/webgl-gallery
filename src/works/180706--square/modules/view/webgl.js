@@ -33,9 +33,6 @@ class WebGL {
   constructor(opts = {}) {
     const { selfCls, isDisableCls, fps } = Object.assign(WebGL._defOpts, opts);
 
-    this._$write = document.createElement('div');
-    document.body.appendChild(this._$write);
-
     // prettier-ignore
     this._status = {
       w: 0, h: 0,
@@ -216,7 +213,6 @@ class WebGL {
     }
     this._status.povx += (_povx - povx) * this._povAccel;
     this._status.povy += (_povy - povy) * this._povAccel;
-    this._$write.textContent = `${this._status.povx}/${this._status.povy}`;
 
     // scroll
     const { x: ox, y: oy } = this._scrollObserver.offset;
