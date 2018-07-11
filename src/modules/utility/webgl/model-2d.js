@@ -6,6 +6,47 @@ import { baseFromHyAn, heightFromHyAn } from '../../model/math-trig';
  */
 
 /**
+ * @param {Array<number>} start - float(-inf,inf)
+ * @param {Array<number>} end - float(-inf,inf)
+ * @param {number} num - int[1,inf)
+ * @param {Object} [opt]
+ * @param {number} [opt.startIndex] - int[0,inf)
+ * @return {Object}
+ * @property {Array<number>} p - position float(-inf,inf)
+ * @property {Array<number>} i - index int[0,inf)
+ */
+export const line = (x1, y1, x2, y2, num, opts = {}) => {
+  const { startIndex } = Object.assign(
+    {
+      startIndex: 0,
+    },
+    opts,
+  );
+
+  const _pos = [];
+  const _idx = [];
+
+  const _w = x1 - x2;
+  const _h = y1 - y2;
+  const _wos = _w / num; // width one size
+  const _hos = _h / num; // height one size
+
+  for (let i = 0; num >= i; i++) {
+    // prettier-ignore
+    _pos.push(
+      x1 - (_wos * i),
+      y1 - (_hos * i),
+      0,
+    );
+    if (i) {
+      _idx.push(startIndex + i - 1);
+    }
+  }
+
+  return { p: _pos, i: _idx };
+};
+
+/**
  * @param {number} width - float[0,inf)
  * @param {number} height - float[0,inf)
  * @param {number} row - int[0,inf)
@@ -94,8 +135,9 @@ export const square = (width, height, row, col, opts = {}) => {
  * @property {Array<number>} i - index int[0,inf)
  */
 export const circle = (rad, num, opts = {}) => {
-  const { offset, ratio, color, startIndex } = Object.assign(
+  const { rotate, offset, ratio, color, startIndex } = Object.assign(
     {
+      rotate: 0,
       offset: [0, 0],
       ratio: [1, 1],
       color: [1, 1, 1, 1],
@@ -116,7 +158,7 @@ export const circle = (rad, num, opts = {}) => {
   _clr.push(...color);
 
   for (let i = 0; num > i; i++) {
-    const _a = _ang * i;
+    const _a = _ang * i + ((Math.PI * 2) / 360) * rotate;
     const _x = baseFromHyAn(rad, _a);
     const _y = heightFromHyAn(rad, _a);
     // prettier-ignore

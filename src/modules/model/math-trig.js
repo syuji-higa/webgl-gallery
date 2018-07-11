@@ -1,5 +1,5 @@
 /**
- * mathTrig
+ * math trig
  */
 
 /**
