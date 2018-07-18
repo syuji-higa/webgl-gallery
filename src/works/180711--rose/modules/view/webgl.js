@@ -201,7 +201,7 @@ class WebGL {
       dox, doy, povx, povy,
     } = this._status;
 
-    const _t = new Date().getTime() - this._startedTime;
+    const _t = new Date().getTime();
 
     // point of view
     let _povx = 0;

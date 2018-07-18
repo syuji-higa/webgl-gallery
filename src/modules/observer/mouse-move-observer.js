@@ -55,8 +55,8 @@ class MouseMoveObserver extends Singleton {
   _mousemoved(e) {
     const { width, height } = this._windowSizeObserver.size;
 
-    this._status.x = (e.pageX / width) * 2 - 1;
-    this._status.y = (e.pageY / height) * 2 - 1;
+    this._status.x = (e.clientX / width) * 2 - 1;
+    this._status.y = (e.clientY / height) * 2 - 1;
   }
 }
 
