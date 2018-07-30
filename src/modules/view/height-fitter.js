@@ -22,7 +22,7 @@ class HeightFitter {
 
     this._winHeight = 0;
 
-    this._windowSeizeObserver = WindowSizeObserver.getInstance();
+    this._windowSizeObserver = WindowSizeObserver.getInstance();
 
     this._resizeEvt = EventObserver.getInstance().create(
       document,
@@ -31,16 +31,27 @@ class HeightFitter {
     );
   }
 
-  add() {
+  /**
+   * @return {Instance}
+   */
+  on() {
     this._resizeEvt.add();
+    return this;
   }
 
-  remove() {
+  /**
+   * @return {Instance}
+   */
+  off() {
     this._resizeEvt.remove();
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   resize() {
-    this._winHeight = this._windowSeizeObserver.size.height;
+    this._winHeight = this._windowSizeObserver.size.height;
 
     Array.from(this._$$el, $el => {
       $el.style.height = `${this._winHeight}px`;
@@ -48,6 +59,8 @@ class HeightFitter {
     });
 
     document.dispatchEvent(new CustomEvent('heightResize'));
+
+    return this;
   }
 }
 
