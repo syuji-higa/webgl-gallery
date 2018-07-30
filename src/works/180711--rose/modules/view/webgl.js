@@ -120,6 +120,9 @@ class WebGL {
     );
   }
 
+  /**
+   * @return {Instance}
+   */
   start() {
     if (this._gl === 'undefined') {
       throw new Error('Not find WebGL context.');
@@ -130,8 +133,13 @@ class WebGL {
     this._rAF.add(this, this._render.bind(this), this._fps);
     this._resizeEvt.add();
     this._heightResizeEvt.add();
+
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   stop() {
     if (this._gl === 'undefined') {
       throw new Error('Not find WebGL context.');
@@ -140,6 +148,32 @@ class WebGL {
     this._rAF.remove(this);
     this._resizeEvt.remove();
     this._heightResizeEvt.remove();
+
+    return this;
+  }
+
+  /**
+   * @param {string} id
+   * @param {string} method
+   * @param {?*} arg
+   * @return {Promise}
+   */
+  async object(id, method, ...arg) {
+    if (this._gl === 'undefined') {
+      throw new Error('Not find WebGL context.');
+    }
+
+    if (!(id in this._objects)) {
+      throw new Error(`Not find "${id}" id.`);
+    }
+
+    const _object = this._objects[id];
+
+    if (!(method in _object)) {
+      throw new Error(`Not find "${id}" id.`);
+    }
+
+    await _object[method](...arg);
   }
 
   _resize() {
@@ -168,30 +202,6 @@ class WebGL {
 
     // set gebGL viewport
     this._gl.viewport(0, 0, _w, _h);
-  }
-
-  /**
-   * @param {string} id
-   * @param {string} method
-   * @param {?*} arg
-   * @return {Promise}
-   */
-  async object(id, method, ...arg) {
-    if (this._gl === 'undefined') {
-      throw new Error('Not find WebGL context.');
-    }
-
-    if (!(id in this._objects)) {
-      throw new Error(`Not find "${id}" id.`);
-    }
-
-    const _object = this._objects[id];
-
-    if (!(method in _object)) {
-      throw new Error(`Not find "${id}" id.`);
-    }
-
-    await _object[method](...arg);
   }
 
   _render() {

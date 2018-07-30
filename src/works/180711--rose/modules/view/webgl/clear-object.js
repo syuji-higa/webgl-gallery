@@ -102,14 +102,22 @@ class MainObject {
     };
   }
 
+  /**
+   * @return {Instance}
+   */
   start() {
     if (this._status.isDrawing) return;
     this._status.isDrawing = true;
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   stop() {
     if (!this._status.isDrawing) return;
     this._status.isDrawing = false;
+    return this;
   }
 
   /**
@@ -132,6 +140,7 @@ class MainObject {
    * @param {Float32Array} data.pMat
    * @param {Float32Array} data.tmpMat
    * @param {Float32Array} data.mvpMat
+   * @return {Instance}
    */
   draw(data) {
     const { _status } = this;
@@ -142,7 +151,7 @@ class MainObject {
     if (_status.startTime === null) {
       _status.startTime = data.time;
     }
-    const _time = data.time - _status.startTime;
+    // const _time = data.time - _status.startTime;
 
     // variables
     const {
@@ -174,6 +183,8 @@ class MainObject {
 
     // draw
     _gl.drawElements(_gl.TRIANGLES, od.indexLen, _gl.UNSIGNED_SHORT, 0);
+
+    return this;
   }
 }
 
