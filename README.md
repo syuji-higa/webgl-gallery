@@ -23,3 +23,9 @@ index production build
 ```bash
 $ npm run index-production -- [dirctoryName]
 ```
+
+## docs serve
+docs serving
+```bash
+$ npm run serve
+```

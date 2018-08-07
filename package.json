@@ -7,7 +7,8 @@
     "develop": "node build.js",
     "production": "NODE_ENV=production node build-index.js && NODE_ENV=production node build.js",
     "index-develop": "node build-index.js",
-    "index-production": "NODE_ENV=production node build-index.js"
+    "index-production": "NODE_ENV=production node build-index.js",
+    "serve": "php -S localhost:4444 -t docs"
   },
   "repository": {
     "type": "git",
