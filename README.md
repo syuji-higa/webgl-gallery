@@ -3,23 +3,23 @@
 ## developt
 build & serve & watch
 ```bash
-$ npm run build -- [dirctoryName]
+$ npm run develop -- [dirctoryName]
 ```
 
 ## production
 production build & index build
 ```bash
-$ npm run build:production -- [dirctoryName]
+$ npm run production -- [dirctoryName]
 ```
 
 ## index develop
 index build & index serve & index watch
 ```bash
-$ npm run build-index -- [dirctoryName]
+$ npm run index-develop -- [dirctoryName]
 ```
 
 ## index production
 index production build
 ```bash
-$ npm run build-index:production -- [dirctoryName]
+$ npm run index-production -- [dirctoryName]
 ```

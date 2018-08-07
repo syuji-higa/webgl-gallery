@@ -4,10 +4,10 @@
   "description": "WebGL Gallery",
   "main": "build.js",
   "scripts": {
-    "build": "node build.js",
-    "build:production": "NODE_ENV=production node build-index.js && NODE_ENV=production node build.js",
-    "build-index": "node build-index.js",
-    "build-index:production": "NODE_ENV=production node build-index.js"
+    "develop": "node build.js",
+    "production": "NODE_ENV=production node build-index.js && NODE_ENV=production node build.js",
+    "index-develop": "node build-index.js",
+    "index-production": "NODE_ENV=production node build-index.js"
   },
   "repository": {
     "type": "git",
