@@ -61,7 +61,7 @@ if (isProduction) {
     .hmr({ reload: true })
     .watch();
   fuse.dev({
-    root: distDir,
+    root: 'docs',
     httpServer: true,
   });
 }
