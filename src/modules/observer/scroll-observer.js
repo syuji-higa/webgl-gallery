@@ -19,15 +19,32 @@ class ScrollObserver extends Singleton {
       this._onScroll.bind(this),
     );
 
-    this.add();
+    this.add().scrolled();
   }
 
+  /**
+   * @return {Instance}
+   */
   add() {
     this._scrollEvt.add();
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   remove() {
     this._scrollEvt.remove();
+    return this;
+  }
+
+  /**
+   * @return {Instance}
+   */
+  scrolled() {
+    this._status.x = window.pageXOffset;
+    this._status.y = window.pageYOffset;
+    return this;
   }
 
   /**
@@ -42,16 +59,8 @@ class ScrollObserver extends Singleton {
     };
   }
 
-  /**
-   * @param {Event} e
-   */
-  _onScroll(e) {
-    this._scrollThrottle(this._scrolled.bind(this, e));
-  }
-
-  _scrolled() {
-    this._status.x = window.pageXOffset;
-    this._status.y = window.pageYOffset;
+  _onScroll() {
+    this._scrollThrottle(this.scrolled.bind(this));
   }
 }
 

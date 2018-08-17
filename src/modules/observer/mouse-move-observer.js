@@ -25,12 +25,20 @@ class MouseMoveObserver extends Singleton {
     this.add();
   }
 
+  /**
+   * @return {Instance}
+   */
   add() {
     this._mousemoveEvt.add();
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   remove() {
     this._mousemoveEvt.remove();
+    return this;
   }
 
   /**

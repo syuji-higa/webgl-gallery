@@ -41,6 +41,7 @@ class EventObserver extends Singleton {
    * @param {string} eventType
    * @param {function} listener
    * @param {boolean|Object} [opt]
+   * @return {Instance}
    */
   add(target, eventType, listener, opt = false) {
     let _hasEvent = false;
@@ -68,12 +69,15 @@ class EventObserver extends Singleton {
         event: this._addEvent(target, eventType, _listeners, opt),
       });
     }
+
+    return this;
   }
 
   /**
    * @param {Element} target
    * @param {string} eventType
    * @param {function} listener
+   * @return {Instance}
    */
   remove(target, eventType, listener) {
     this._events.forEach((evt, i) => {
@@ -89,6 +93,8 @@ class EventObserver extends Singleton {
         return;
       }
     });
+
+    return this;
   }
 
   /**

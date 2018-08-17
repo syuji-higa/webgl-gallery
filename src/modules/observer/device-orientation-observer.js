@@ -23,12 +23,20 @@ class DeviceOrientationObserver extends Singleton {
     this.add();
   }
 
+  /**
+   * @return {Instance}
+   */
   add() {
     this._deviceorientationEvt.add();
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   remove() {
     this._deviceorientationEvt.remove();
+    return this;
   }
 
   /**

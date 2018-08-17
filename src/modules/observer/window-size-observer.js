@@ -1,6 +1,6 @@
 import Singleton from '../pattern/singleton';
+import EventObserver from '../observer/event-observer';
 import { debounce } from '../utility/debounce';
-import { createResizeEvent } from '../utility/resize-event';
 
 class WindowSizeObserver extends Singleton {
   /**
@@ -21,17 +21,58 @@ class WindowSizeObserver extends Singleton {
 
     this._resizeDebounce = debounce(200);
 
-    this._resizeEvt = createResizeEvent(this._onResize.bind(this));
+    this._resizeEvt = EventObserver.getInstance().create(
+      document,
+      'resize',
+      this.resize.bind(this),
+    );
 
-    this.add();
+    this.add().resize();
   }
 
+  /**
+   * @return {Instance}
+   */
   add() {
     this._resizeEvt.add();
+    return this;
   }
 
+  /**
+   * @return {Instance}
+   */
   remove() {
     this._resizeEvt.remove();
+    return this;
+  }
+
+  /**
+   * @return {Instance}
+   */
+  resize() {
+    const { _status } = this;
+
+    _status.width = window.innerWidth;
+    _status.height = window.innerHeight;
+
+    if (this._breakPoint[0] > _status.width) {
+      if (_status.type !== 'sp') {
+        _status.type = 'sp';
+        this._dispatchEvent();
+      }
+    } else if (this._breakPoint[1] > _status.width) {
+      if (_status.type !== 'tb') {
+        _status.type = 'tb';
+        this._dispatchEvent();
+      }
+    } else {
+      if (_status.type !== 'pc') {
+        _status.type = 'pc';
+        this._dispatchEvent();
+      }
+    }
+
+    return this;
   }
 
   /**
@@ -55,32 +96,6 @@ class WindowSizeObserver extends Singleton {
 
   _onResize() {
     this._resizeDebounce(this.resize.bind(this));
-  }
-
-  resize() {
-    const { _status } = this;
-
-    if (this._breakPoint[0] > _status.width) {
-      if (_status.type !== 'sp') {
-        _status.type = 'sp';
-        this._dispatchEvent();
-      }
-    } else if (this._breakPoint[1] > _status.width) {
-      if (_status.type !== 'tb') {
-        _status.type = 'tb';
-        this._dispatchEvent();
-      }
-    } else {
-      if (_status.type !== 'pc') {
-        _status.type = 'pc';
-        this._dispatchEvent();
-      }
-    }
-
-    _status.width = window.innerWidth;
-    _status.height = window.innerHeight;
-
-    document.dispatchEvent(new CustomEvent('resize'));
   }
 
   _dispatchEvent() {
