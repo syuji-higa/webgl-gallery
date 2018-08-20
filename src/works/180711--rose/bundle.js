@@ -1,7 +1,11 @@
 import 'babel-polyfill';
-import '../../modules/event/resize-event';
+import WindowSizeObserver from '../../modules/observer/window-size-observer';
 import HeightFitter from '../../modules/view/height-fitter';
 import WebGL from './modules/view/webgl';
+
+WindowSizeObserver.getInstance()
+  .add()
+  .resize();
 
 const webGL = new WebGL();
 webGL.start();

@@ -1,3 +1,4 @@
+import bowser from 'bowser';
 import Singleton from '../pattern/singleton';
 import EventObserver from '../observer/event-observer';
 import { debounce } from '../utility/debounce';
@@ -19,15 +20,15 @@ class WindowSizeObserver extends Singleton {
       height: 0,
     };
 
+    this._isMobileDevice = bowser.mobile || bowser.tablet;
+
     this._resizeDebounce = debounce(200);
 
     this._resizeEvt = EventObserver.getInstance().create(
-      document,
+      window,
       'resize',
-      this.resize.bind(this),
+      this._onResize.bind(this),
     );
-
-    this.add().resize();
   }
 
   /**
@@ -72,6 +73,8 @@ class WindowSizeObserver extends Singleton {
       }
     }
 
+    document.dispatchEvent(new CustomEvent('resize'));
+
     return this;
   }
 
@@ -95,7 +98,9 @@ class WindowSizeObserver extends Singleton {
   }
 
   _onResize() {
-    this._resizeDebounce(this.resize.bind(this));
+    if (!this._isMobileDevice || this._status.width !== window.innerWidth) {
+      this._resizeDebounce(this.resize.bind(this));
+    }
   }
 
   _dispatchEvent() {

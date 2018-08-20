@@ -43,7 +43,7 @@ class WebGL {
       povx: 0, povy: 0,
     };
 
-    this._isTouchDevice = bowser.mobile || bowser.tablet;
+    this._isMobileDevice = bowser.mobile || bowser.tablet;
     this._dpr = devicePixelRatio || 1;
     this._fps = fps;
     this._povAccel = 0.02;
@@ -51,7 +51,7 @@ class WebGL {
     this._matIV = new MatIV();
     this._rAF = RequestAnimationFramer.getInstance();
     this._scrollObserver = ScrollObserver.getInstance();
-    if (this._isTouchDevice) {
+    if (this._isMobileDevice) {
       this._deviceOrientationObserver = DeviceOrientationObserver.getInstance();
     } else {
       this._mouseMoveObserver = MouseMoveObserver.getInstance();
@@ -212,7 +212,7 @@ class WebGL {
     // point of view
     let _povx = 0;
     let _povy = 0;
-    if (this._isTouchDevice) {
+    if (this._isMobileDevice) {
       const { beta, gamma } = this._deviceOrientationObserver.orientation;
       _povx = gamma;
       _povy = beta;
