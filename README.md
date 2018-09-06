@@ -15,13 +15,13 @@ $ npm run production -- [dirctoryName]
 ## index develop
 index build & index serve & index watch
 ```bash
-$ npm run index-develop -- [dirctoryName]
+$ npm run index-develop
 ```
 
 ## index production
 index production build
 ```bash
-$ npm run index-production -- [dirctoryName]
+$ npm run index-production
 ```
 
 ## docs serve
