@@ -10,12 +10,9 @@ overrides:
     semi: true
     trailingComma: "all"
     parser: "babylon"
-- files: "src/js/**/*.js"
+- files: "src/**/*.js"
   options:
     singleQuote: true
     semi: true
     trailingComma: "all"
     parser: "babylon"
-- files: "src/sass/**/*.scss"
-  options:
-    parser: "scss"
