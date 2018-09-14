@@ -3,6 +3,27 @@
  */
 
 /**
+ * @param {number} col - int[0,inf)
+ * @param {number} x - int[0,inf)
+ * @param {number} y - int[0,inf)
+ * @return {number}
+ */
+export const getIndex = (col, x, y) => {
+  return col * y + x;
+};
+
+/**
+ * @param {number} col - int[0,inf)
+ * @param {number} index - int[0,inf)
+ * @return {Array<number>}
+ */
+export const getPosition = (col, index) => {
+  const x = index % col;
+  const y = (index - x) / col;
+  return [x, y];
+};
+
+/**
  * @param {Array<number>} c1 - float[0,1]
  * @param {Array<number>} c2 - float[0,1]
  * @param {Array<number>} c3 - float[0,1]
