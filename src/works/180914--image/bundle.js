@@ -10,7 +10,7 @@ WindowSizeObserver.getInstance()
 const webGL = new WebGL();
 
 (async () => {
-  await webGL.object('main', 'load', '../images/photo-1.jpg');
+  await webGL.object('main', 'load', '../images/photo-2.jpg');
   webGL.start().object('main', 'start');
 
   new HeightFitter().on().resize();

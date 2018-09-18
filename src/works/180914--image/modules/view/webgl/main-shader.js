@@ -129,7 +129,7 @@ export const fShader = `
     vec2 _p = (gl_FragCoord.xy * 2. - resolution) / min(resolution.x, resolution.y);
     vec3 _os = objectStatus;
 
-    float _distortion = clamp(pow(1. - length(_p - pov * size), (3.0 - _os.y) * 3.), .1, 1.) * .5 * _os.x;
+    float _distortion = clamp(pow(1. - length(_p - pov * size), (3.1 - _os.y) * 5.), .1, 1.) * .1 * _os.x;
 
     vec4 _smpColor = texture2D(texture, vec2(
       fract(vCoord.x + snoise(vec3(vCoord.x, vCoord.y, time * .0002 * _os.z)) * _distortion),

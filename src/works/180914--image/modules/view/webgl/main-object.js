@@ -79,7 +79,7 @@ class MainObject {
     const _attLen = this._attStrides.reduce((p, c) => p + c);
 
     // create model
-    const _model = square(0.5, 0.5, 20, 20);
+    const _model = square(1, 1, 20, 20);
 
     // set attribute
     for (let i = 0; _model.p.length / 3 > i; i++) {
@@ -217,6 +217,8 @@ class MainObject {
 
     // matrix transform
     _m.identity(data.mMat);
+    _m.multiply(data.tmpMat, data.mMat, data.mvpMat);
+    _m.scale(data.mMat, [data.wor, data.wor, 0], data.mMat);
     _m.multiply(data.tmpMat, data.mMat, data.mvpMat);
 
     // set uniform
