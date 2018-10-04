@@ -71,7 +71,7 @@ export const sign = num => {
  * @return {number}
  */
 export const clamp = (num, min, max) => {
-  return Math.max(min, Math.min(num, max));
+  return min > num ? min : max < num ? max : num;
 };
 
 /**
