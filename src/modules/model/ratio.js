@@ -38,12 +38,14 @@ export const cover = (width, height, ratio) => {
  * @param {number} w - int[0,inf)
  * @param {number} h - int[0,inf)
  * @return {Object}
+ * @property {number} max - float[1,inf)
  * @property {number} width - float[1,inf)
  * @property {number} height - float[1,inf)
  */
 export const normalizeOverRatio = (w, h) => {
   const _maxRatio = Math.max(w / h, h / w);
   return {
+    max: _maxRatio,
     width: w > h ? _maxRatio : 1,
     height: h > w ? _maxRatio : 1,
   };
@@ -53,12 +55,14 @@ export const normalizeOverRatio = (w, h) => {
  * @param {number} w - int[0,inf)
  * @param {number} h - int[0,inf)
  * @return {Object}
+ * @property {number} min - float[0,1]
  * @property {number} width - float[0,1]
  * @property {number} height - float[0,1]
  */
 export const normalizeUnderRatio = (w, h) => {
   const _minRatio = Math.min(w / h, h / w);
   return {
+    min: _minRatio,
     width: w > h ? 1 : _minRatio,
     height: h > w ? 1 : _minRatio,
   };
