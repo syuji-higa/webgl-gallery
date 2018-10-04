@@ -104,8 +104,8 @@ export const createIbo = (gl, data) => {
 export const createTexture = (gl, img, opts) => {
   const { dpr, maxSize } = Object.assign({ dpr: 1, maxSize: null }, opts);
 
-  const _w = img.naturalWidth;
-  const _h = img.naturalHeight;
+  const _w = img.naturalWidth || img.clientWidth;
+  const _h = img.naturalHeight || img.clientHeight;
   const _canvasW = _w * dpr;
   const _canvasH = _h * dpr;
   const _maxTextureSize = maxSize || gl.getParameter(gl.MAX_TEXTURE_SIZE);
