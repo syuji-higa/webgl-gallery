@@ -170,7 +170,7 @@ class WebGL {
     const _object = this._objects[id];
 
     if (!(method in _object)) {
-      throw new Error(`Not find "${id}" id.`);
+      throw new Error(`Not find "${method}" method.`);
     }
 
     await _object[method](...arg);
