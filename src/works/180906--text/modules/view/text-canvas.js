@@ -49,8 +49,6 @@ class TextCanvas {
       'input',
       this._onInput.bind(this),
     );
-
-    this._setTexture();
   }
 
   /**
@@ -86,7 +84,10 @@ class TextCanvas {
         google: {
           families: [this._fontFamily],
         },
-        active: resolve,
+        active: () => {
+          this._setTexture();
+          resolve();
+        },
         inactive: resolve,
       });
     });
