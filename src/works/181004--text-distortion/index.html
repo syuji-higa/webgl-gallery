@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <title>$title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <style>
+      body { background-color: #251219; margin: 0; overflow: hidden; }
+      .canvas { overflow: hidden; }
+      .dg select { width: 98px !important; font-size: 11px !important; }
+      .dg .property-name { width: 40% !important; }
+      .dg .c, .dg .slider { width: 60% !important; }
+      .dg .slider { margin-left: 0 !important; }
+      .text-canvas { opacity: 0; position: absolute; top: 0; left: 0; }
+      .text-canvas-field { width: 140px; border: 1px solid #ccc; padding: 4px 8px; position: fixed; top: 40px; left: 40px; font-size: 24px; color: #113355; font-family: 'Ubuntu', sans-serif; }
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+  <body>
+    <canvas class="text-canvas js-text-canvas" width="1000" height="1000"></canvas>
+    <input class="text-canvas-field js-text-canvas-field" type="text" value="WebGL">
+    <div class="canvas js-webgl js-height-fitter"></div>
+    <script src="./bundle.js"></script>
+  </body>
+</head>
