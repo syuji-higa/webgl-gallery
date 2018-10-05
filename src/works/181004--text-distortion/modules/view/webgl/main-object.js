@@ -219,7 +219,7 @@ class MainObject {
 
     // matrix transform
     _m.identity(data.mMat);
-    _m.scale(data.mMat, [data.orMax, data.orMax, 1], data.mMat);
+    _m.scale(data.mMat, [data.hor, data.wor, 1], data.mMat);
     _m.multiply(data.tmpMat, data.mMat, data.mvpMat);
 
     // set uniform
