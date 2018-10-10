@@ -30,9 +30,9 @@ class MainObject {
 
     // create object status
     this._objectStatus = {
-      power1: 1.5,
-      power2: 1.5,
-      speed: 1.5,
+      power1: 1.0,
+      power2: 1.0,
+      speed: 1.0,
     };
 
     /**
@@ -41,9 +41,9 @@ class MainObject {
     {
       const _gui = DatGUI.getInstance().gui;
       _gui.remember(this._objectStatuse);
-      _gui.add(this._objectStatus, 'power1', 0.0, 3.0);
-      _gui.add(this._objectStatus, 'power2', 0.0, 3.0);
-      _gui.add(this._objectStatus, 'speed', 0.0, 3.0);
+      _gui.add(this._objectStatus, 'power1', 0.0, 5.0);
+      _gui.add(this._objectStatus, 'power2', -5.0, 5.0);
+      _gui.add(this._objectStatus, 'speed', 0.0, 5.0);
     }
 
     // webGL items
