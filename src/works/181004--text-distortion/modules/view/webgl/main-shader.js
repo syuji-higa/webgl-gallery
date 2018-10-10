@@ -1,23 +1,4 @@
 export const vShader = `
-  attribute vec3  position;
-  attribute vec2  coord;
-  uniform   mat4  mvpMatrix;
-  varying   vec2  vCoord;
-
-  void main(void) {
-    vCoord = coord;
-
-    vec3 _p = position;
-
-    vec4 _destPos = mvpMatrix * vec4(_p, 1.);
-
-    gl_Position = _destPos;
-  }
-`;
-
-export const fShader = `
-  precision mediump float;
-
   //
   // Description : Array and textureless GLSL 2D/3D/4D simplex
   //               noise functions.
@@ -120,29 +101,47 @@ export const fShader = `
                                   dot(p2,x2), dot(p3,x3) ) );
   }
 
+  attribute vec3  position;
+  attribute vec2  coord;
+  uniform   mat4  mvpMatrix;
+  uniform   float time;
+  uniform   vec4  pov; // point of view => x, y, xVelocity, yVelocity
+  uniform   vec3  objectStatus; // power, speed, scale
+  varying   vec2  vCoord;
+
+  void main(void) {
+    vCoord = coord;
+
+    vec3 _p = position;
+    vec3  _os = objectStatus;
+    float _t = time * .002 * _os.y;
+
+    float _noiseRatio = exp(sin(_t) * 3.) * .025 * _os.x;
+    float _distortion = 1. - length(_p);
+    float _scale = _os.z;
+
+    mat4 _transform = mat4(
+      _scale, 0., 0., snoise(vec3(_p.y, _p.x, _t)) * _noiseRatio + _distortion * pov.x,
+      0., _scale, 0., snoise(vec3(_p.x, _p.y, _t)) * _noiseRatio + _distortion * pov.y,
+      0., 0., 1., 0.,
+      0., 0., 0., 1.
+    );
+
+    vec4 _destPos = mvpMatrix * (vec4(_p, 1.) * _transform);
+
+    gl_Position = _destPos;
+  }
+`;
+
+export const fShader = `
+  precision mediump float;
+
   uniform sampler2D texture;
-  uniform float     time;
-  uniform vec4      pov; // point of view => x, y, xVelocity, yVelocity
   uniform vec2      resolution;
-  uniform vec3      objectStatus; // power, speed, scale
   varying vec2      vCoord;
 
   void main(void) {
-    vec2 _p = (gl_FragCoord.xy * 2. - resolution) / min(resolution.x, resolution.y);
-    vec3 _os = objectStatus;
-    float _t = time * .001 * _os.y;
-
-    float _noiseRatio = exp(sin(_t) * 3.) * .02 * _os.x;
-    float _distortion = 1. - length(_p);
-    float _scale = length(pov.zw) + _os.z;
-
-    mat3 _transform = mat3(
-      1. - _scale, 0., snoise(vec3(_p.y, _p.x, _t)) * _noiseRatio + _scale * .5 + _distortion * pov.x,
-      0., 1. - _scale, snoise(vec3(_p.x, _p.y, _t)) * _noiseRatio + _scale * .5 + _distortion * pov.y,
-      0., 0., 1.
-    );
-
-    vec4 _smpColor = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy);
+    vec4 _smpColor = texture2D(texture, vCoord);
 
     gl_FragColor = _smpColor;
   }

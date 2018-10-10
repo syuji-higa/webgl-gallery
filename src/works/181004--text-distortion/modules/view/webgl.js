@@ -98,7 +98,7 @@ class WebGL {
     this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
     // culling
-    this._gl.enable(this._gl.CULL_FACE);
+    // this._gl.enable(this._gl.CULL_FACE);
 
     // depth test
     this._gl.enable(this._gl.DEPTH_TEST);

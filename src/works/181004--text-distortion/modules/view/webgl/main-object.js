@@ -29,9 +29,9 @@ class MainObject {
 
     // create object status
     this._objectStatus = {
-      power: 0.5,
-      speed: 1.5,
-      scale: 0.1,
+      power: 1.0,
+      speed: 1.0,
+      scale: 1.0,
       wireframe: false,
     };
 
@@ -43,7 +43,7 @@ class MainObject {
       _gui.remember(this._objectStatuse);
       _gui.add(this._objectStatus, 'power', 0.0, 10.0);
       _gui.add(this._objectStatus, 'speed', 0.0, 5.0);
-      _gui.add(this._objectStatus, 'scale', -1.0, 1.0);
+      _gui.add(this._objectStatus, 'scale', 0.0, 3.0);
       _gui.add(this._objectStatus, 'wireframe');
     }
 
@@ -79,7 +79,7 @@ class MainObject {
     const _attLen = this._attStrides.reduce((p, c) => p + c);
 
     // create model
-    const _model = square(1, 1, 100, 100);
+    const _model = square(1, 1, 41, 41);
 
     // set attribute
     for (let i = 0; _model.p.length / 3 > i; i++) {
@@ -225,7 +225,7 @@ class MainObject {
     // set uniform
     _gl.uniformMatrix4fv(_ul[0], false, data.mvpMat); // mvpMatrix
     _gl.uniform1f(_ul[1], _time); // time
-    _gl.uniform4fv(_ul[2], [data.povX, data.povY, data.povVelX, data.povVelY]); // point of view
+    _gl.uniform4fv(_ul[2], [-data.povX, data.povY, data.povVelX, data.povVelY]); // point of view
     _gl.uniform2fv(_ul[3], [data.w, data.h]); // resolution
     _gl.uniform3fv(_ul[4], [os.power, os.speed, os.scale]); // object status
     _gl.uniform1i(_ul[5], this._status.texture); // texture
