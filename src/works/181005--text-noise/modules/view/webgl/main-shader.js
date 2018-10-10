@@ -1,27 +1,4 @@
 export const vShader = `
-  const float PI = 3.1415926;
-
-  float interpolate(float a, float b, float x){
-    float f = (1. - cos(x * PI)) * .5;
-    return a * (1. - f) + b * f;
-  }
-
-  float rand(vec2 p) {
-    return fract(sin(dot(p.xy, vec2(12.9898, 78.233))) * 43758.5453);
-  }
-
-  float irand(vec2 p){
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    vec4 v = vec4(
-      rand(vec2(i.x,      i.y     )),
-      rand(vec2(i.x + 1., i.y     )),
-      rand(vec2(i.x,      i.y + 1.)),
-      rand(vec2(i.x + 1., i.y + 1.))
-    );
-    return interpolate(interpolate(v.x, v.y, f.x), interpolate(v.z, v.w, f.x), f.y);
-  }
-
   attribute vec3  position;
   attribute vec2  coord;
   uniform   mat4  mvpMatrix;
@@ -71,17 +48,17 @@ export const fShader = `
       0., 0., 1.
     );
 
-    float rgbShiftRate = .02 * _os.w;
+    float _rgbShiftRate = .02 * _os.w;
 
-    vec4 _smpColor1 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + pov.z * rgbShiftRate);
-    vec4 _smpColor2 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + pov.w * rgbShiftRate);
-    vec4 _smpColor3 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + length(pov.zw) * rgbShiftRate);
+    vec4 _smpColor1 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + pov.z * _rgbShiftRate);
+    vec4 _smpColor2 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + pov.w * _rgbShiftRate);
+    vec4 _smpColor3 = texture2D(texture, (vec3(vCoord, 1.) * _transform).xy + length(pov.zw) * _rgbShiftRate);
 
     vec4 _smpColor = vec4(
       _smpColor1.r,
       _smpColor2.g,
       _smpColor3.b,
-      _smpColor1.r + _smpColor2.g + _smpColor2.b
+      (_smpColor1.a + _smpColor2.a + _smpColor3.a) / 3.
     );
 
     gl_FragColor = _smpColor;
