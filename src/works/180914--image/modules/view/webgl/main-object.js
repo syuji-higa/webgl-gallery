@@ -126,7 +126,10 @@ class MainObject {
     const { texture, NaturalWidth, NaturalHeight } = await createTexture(
       this._gl,
       _img,
-      { dpr: this._dpr },
+      {
+        dpr: this._dpr,
+        maxSize: Math.max(window.innerWidth, window.innerHeight),
+      },
     );
 
     // set texture
