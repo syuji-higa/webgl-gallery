@@ -108,11 +108,9 @@ export const createTexture = (gl, img, opts) => {
   const _h = img.naturalHeight || img.clientHeight;
   const _canvasW = _w * dpr;
   const _canvasH = _h * dpr;
-  const _maxTextureSize = maxSize || gl.getParameter(gl.MAX_TEXTURE_SIZE);
-  const _size = Math.min(
-    toTowPower(Math.max(_canvasW, _canvasH)),
-    _maxTextureSize,
-  );
+  const _maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  const _maxSize = maxSize ? Math.min(maxSize * dpr, _maxTexSize) : _maxTexSize;
+  const _size = toTowPower(Math.min(Math.max(_canvasW, _canvasH), _maxSize));
   if (_canvasW !== _canvasH || _canvasW !== _size) {
     const _$canvas = document.createElement('canvas');
     _$canvas.height = _$canvas.width = _size;
