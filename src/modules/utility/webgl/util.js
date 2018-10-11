@@ -99,41 +99,91 @@ export const createIbo = (gl, data) => {
  * @param {Element} img
  * @param {Object} [opts]
  * @param {number} [opts.dpr] - float
+ * @param {boolean} [opts.mipmap]
  * @param {?number} [opts.maxSize] - int
+ * @return {Object}
+ * @property {WebGLTexture} texture
+ * @property {number} originalWidth - int
+ * @property {number} originalHeight - int
  */
 export const createTexture = (gl, img, opts) => {
-  const { dpr, maxSize } = Object.assign({ dpr: 1, maxSize: null }, opts);
+  const { dpr, mipmap, maxSize } = Object.assign(
+    { dpr: 1, mipmap: true, maxSize: null },
+    opts,
+  );
 
-  const _w = img.naturalWidth || img.clientWidth;
-  const _h = img.naturalHeight || img.clientHeight;
-  const _canvasW = _w * dpr;
-  const _canvasH = _h * dpr;
-  const _maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-  const _maxSize = maxSize ? Math.min(maxSize * dpr, _maxTexSize) : _maxTexSize;
-  const _size = toTowPower(Math.min(Math.max(_canvasW, _canvasH), _maxSize));
-  if (_canvasW !== _canvasH || _canvasW !== _size) {
-    const _$canvas = document.createElement('canvas');
-    _$canvas.height = _$canvas.width = _size;
-    _$canvas.getContext('2d').drawImage(img, 0, 0, _w, _h, 0, 0, _size, _size);
-    img = _$canvas;
+  const _orgW = img.naturalWidth || img.clientWidth;
+  const _orgH = img.naturalHeight || img.clientHeight;
+
+  if (mipmap) {
+    const _w = _orgW * dpr;
+    const _h = _orgH * dpr;
+    const _maxTexSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    const _maxSize = maxSize
+      ? Math.min(maxSize * dpr, _maxTexSize)
+      : _maxTexSize;
+    const _size = toTowPower(Math.min(Math.max(_w, _h), _maxSize));
+    if (_w !== _h || _w !== _size) {
+      const _$canvas = document.createElement('canvas');
+      _$canvas.height = _$canvas.width = _size;
+      _$canvas
+        .getContext('2d')
+        .drawImage(img, 0, 0, _orgW, _orgH, 0, 0, _size, _size);
+      img = _$canvas;
+    }
   }
 
   const _tex = gl.createTexture();
 
   gl.bindTexture(gl.TEXTURE_2D, _tex);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.generateMipmap(gl.TEXTURE_2D);
+  setTexParameteri(gl);
+  if (mipmap) {
+    gl.generateMipmap(gl.TEXTURE_2D);
+  }
   gl.bindTexture(gl.TEXTURE_2D, null);
 
   return {
     texture: _tex,
-    originalWidth: _w,
-    originalHeight: _h,
+    originalWidth: _orgW,
+    originalHeight: _orgH,
   };
+};
+
+/**
+ * @param {WebGLRenderingContext} gl
+ * @param {WebGLRenderingContext} texture
+ * @param {Element} video
+ */
+export const setVideoTexture = (gl, texture, video) => {
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+};
+
+/**
+ * @param {WebGLRenderingContext} gl
+ * @param {Object} [opts]
+ * @param {string} [opts.minFilter]
+ * @param {string} [opts.magFilter]
+ * @param {string} [opts.wrapS]
+ * @param {string} [opts.wrapT]
+ */
+export const setTexParameteri = (gl, opts = {}) => {
+  const { minFilter, magFilter, wrapS, wrapT } = Object.assign(
+    {
+      minFilter: 'NEAREST',
+      magFilter: 'NEAREST',
+      wrapS: 'CLAMP_TO_EDGE',
+      wrapT: 'CLAMP_TO_EDGE',
+    },
+    opts,
+  );
+
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[minFilter]);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[magFilter]);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrapS]);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrapT]);
 };
 
 /**
