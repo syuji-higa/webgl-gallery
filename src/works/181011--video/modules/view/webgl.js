@@ -19,7 +19,7 @@ class WebGL {
     return {
       selfCls: 'js-webgl',
       isDisableCls: 'is-webgl-disable',
-      fps: 40,
+      fps: 70,
     };
   }
 
