@@ -13,24 +13,3 @@ node_modules
 
 # sourcemap
 *.map
-
-# sound files
-*.aif
-*.mid
-*.midi
-*.mp3
-*.ra
-*.ram
-*.wav
-
-# movie files
-*.avi
-*.f4v
-*.flv
-*.m4v
-*.mov
-*.mp4
-*.mpeg
-*.mpg
-*.rm
-*.wmv
