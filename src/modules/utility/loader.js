@@ -3,36 +3,48 @@
  */
 
 /**
+ * @param {Element} $video
+ * @return {Promise}
+ */
+export const loadVideo = $video => {
+  return new Promise(resolve => {
+    $video.load();
+    $video.addEventListener(
+      'canplaythrough',
+      () => {
+        resolve();
+      },
+      { once: true },
+    );
+  });
+};
+
+/**
  * @param {string} src
  * @param {Object} [opts]
  * @param {funciton} [opts.done]
  * @param {funciton} [opts.fail]
  * @param {funciton} [opts.always]
- * @param {funciton} [opts.crossOrigin]
  * @return {Promise}
  */
-export const imageLoader = (src, opts = {}) => {
-  const { done, fail, always, crossOrigin } = opts;
+export const loadImage = (src, opts = {}) => {
+  const { done, fail, always } = opts;
 
   return new Promise(resolve => {
     const _img = new Image();
 
-    if (crossOrigin) {
-      _img.crossOrigin = crossOrigin;
-    }
-
-    const _always = img => {
+    const _always = (img, isSuccess) => {
       if (always) always(img);
-      resolve(img);
+      resolve(isSuccess);
     };
 
     _img.onload = () => {
       if (done) done(_img);
-      _always(_img);
+      _always(_img, true);
     };
     _img.onerror = () => {
       if (fail) fail(_img);
-      _always(_img);
+      _always(_img, false);
     };
 
     _img.src = src;
@@ -47,24 +59,24 @@ export const imageLoader = (src, opts = {}) => {
  * @param {funciton} [opts.always]
  * @return {Promise}
  */
-export const fileLoader = (file, opts = {}) => {
+export const loadFile = (file, opts = {}) => {
   const { done, fail, always } = opts;
 
   return new Promise(resolve => {
     const _reader = new FileReader();
 
-    const _always = file_ => {
+    const _always = (file_, isSuccess) => {
       if (always) always(file_);
-      resolve(file);
+      resolve(isSuccess);
     };
 
     _reader.onload = file_ => {
       if (done) done(file_);
-      _always(file_);
+      _always(file_, true);
     };
-    _reader.onerror = file => {
+    _reader.onerror = file_ => {
       if (fail) fail(file_);
-      _always(file_);
+      _always(file_, false);
     };
 
     _reader.readAsDataURL(file);
